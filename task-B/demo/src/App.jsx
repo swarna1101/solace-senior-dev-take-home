@@ -156,7 +156,8 @@ function App() {
       const arrayBuffer = await file.arrayBuffer();
       const blobKey = BlobUtils.generateBlobKey('file');
       
-      const result = await sdk.uploadEncryptedBlob(blobKey, arrayBuffer, {
+      const blob = new Blob([arrayBuffer], { type: file.type });
+      const result = await sdk.uploadBlob(blob, {
         filename: file.name,
         type: file.type,
         originalSize: file.size,
@@ -182,10 +183,10 @@ function App() {
     try {
       addLog(`Downloading ${blob.filename}...`);
       
-      const result = await sdk.downloadDecryptedBlob(blob.blobKey);
+      const result = await sdk.downloadBlob(blob.blobKey);
       
       // Create download link
-      const downloadBlob = new Blob([result.decryptedData], { type: blob.type });
+      const downloadBlob = result.blob;
       const url = URL.createObjectURL(downloadBlob);
       const link = document.createElement('a');
       link.href = url;
@@ -207,7 +208,7 @@ function App() {
 
   const destroySDK = async () => {
     if (sdk) {
-      await sdk.destroy();
+      await sdk.cleanup();
       setSdk(null);
       setIsInitialized(false);
       setIsListening(false);
