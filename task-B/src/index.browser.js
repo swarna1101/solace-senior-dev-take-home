@@ -185,14 +185,52 @@ class VoiceActivityDetector {
     this.isListening = false;
     this.mediaRecorder = null;
     this.audioContext = null;
+    this.audioChunks = [];
+    this.stream = null;
   }
 
   async start(options = {}) {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      this.mediaRecorder = new MediaRecorder(stream);
+      this.stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          sampleRate: 16000,
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true
+        } 
+      });
+      
+      this.mediaRecorder = new MediaRecorder(this.stream);
+      this.audioChunks = [];
+      
+      // Set up event handlers
+      this.mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          this.audioChunks.push(event.data);
+        }
+      };
+      
+      this.mediaRecorder.onstop = async () => {
+        if (this.audioChunks.length > 0) {
+          const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+          
+          // Convert to audio data for processing
+          const arrayBuffer = await audioBlob.arrayBuffer();
+          const audioContext = new AudioContext();
+          const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+          const audioData = audioBuffer.getChannelData(0); // Get first channel
+          
+          // Trigger speech end callback with audio data
+          if (this.options.onSpeechEnd) {
+            this.options.onSpeechEnd(audioData);
+          }
+        }
+      };
+      
+      this.mediaRecorder.start(1000); // Collect data every second
       this.isListening = true;
       
+      // Trigger speech start callback
       if (this.options.onSpeechStart) {
         this.options.onSpeechStart();
       }
@@ -205,9 +243,15 @@ class VoiceActivityDetector {
   }
 
   async stop() {
-    if (this.mediaRecorder) {
+    if (this.mediaRecorder && this.isListening) {
       this.mediaRecorder.stop();
       this.isListening = false;
+      
+      // Stop all tracks
+      if (this.stream) {
+        this.stream.getTracks().forEach(track => track.stop());
+      }
+      
       console.log('VAD stopped');
     }
   }
@@ -479,6 +523,51 @@ class SolaceSDK {
     }
     
     return { blob, metadata };
+  }
+
+  /**
+   * Process audio data (convert to WAV, encrypt, and upload)
+   * @param {Float32Array} audioData - Audio data from VAD
+   * @param {Object} options - Processing options
+   * @returns {Promise<Object>} Processing result
+   */
+  async processAudioData(audioData, options = {}) {
+    if (!audioData || audioData.length === 0) {
+      throw new Error('Audio data is required and cannot be empty');
+    }
+
+    try {
+      // Convert audio to WAV format
+      const wavBuffer = AudioUtils.audioToWAV(audioData);
+      
+      // Generate blob key
+      const blobKey = BlobUtils.generateBlobKey('audio');
+      
+      // Calculate metadata
+      const duration = audioData.length / 16000; // Assuming 16kHz sample rate
+      const metadata = {
+        type: 'audio',
+        format: 'wav',
+        duration,
+        sampleRate: 16000,
+        channels: 1,
+        samples: audioData.length,
+        ...options.metadata,
+      };
+
+      // Create blob and upload
+      const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+      const uploadResult = await this.uploadBlob(blob, metadata);
+      
+      return {
+        blobKey: uploadResult.blobKey,
+        uploadResult,
+        metadata,
+      };
+    } catch (error) {
+      console.error('Failed to process audio data:', error);
+      throw new Error(`Audio processing failed: ${error.message}`);
+    }
   }
 
   /**
