@@ -136,6 +136,7 @@ jspm_packages/
 dist/
 build/
 out/
+function.zip
 
 # Test outputs
 coverage/
