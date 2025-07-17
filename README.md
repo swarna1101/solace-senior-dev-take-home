@@ -75,20 +75,6 @@ solace-senior-dev-take-home/
 - [ ] Error handling and logging
 - [ ] README.md with setup and run instructions
 
-### General Requirements
-- [ ] All code is functional and tested
-- [ ] Proper error handling implemented
-- [ ] Security best practices followed
-- [ ] Documentation is comprehensive
-- [ ] Repository is well-organized
-
-## Getting Started
-
-1. Clone this repository
-2. Install prerequisites listed above
-3. Follow individual task README files for setup instructions
-4. Start with Task A, then Task B, then Task C
-
 ## Architecture Overview
 
 ```
