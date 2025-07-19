@@ -28,17 +28,7 @@ A comprehensive client-side SDK for secure voice processing and encryption, feat
 - **📱 React Demo**: Complete sample application included
 - **🧪 Well-Tested**: Minimal passing test(s) included for demonstration
 
-## 📦 Installation
 
-```bash
-npm install @solace/client-sdk
-```
-
-Or with yarn:
-
-```bash
-yarn add @solace/client-sdk
-```
 
 ---
 

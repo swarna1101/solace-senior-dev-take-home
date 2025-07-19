@@ -1,0 +1,169 @@
+.voice-settings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.voice-settings:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.voice-settings h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.voice-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.voice-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 20px;
+  border-radius: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  min-width: 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.voice-option::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.voice-option:hover::before {
+  left: 100%;
+}
+
+.voice-option:hover {
+  transform: translateY(-3px) scale(1.05);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.voice-option.selected {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  transform: translateY(-2px);
+}
+
+.voice-option.selected:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.voice-icon {
+  font-size: 2rem;
+  transition: all 0.3s ease;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.voice-option:hover .voice-icon {
+  transform: scale(1.1);
+}
+
+.voice-option.selected .voice-icon {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.voice-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.voice-option:hover .voice-name {
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .voice-settings {
+    min-width: 180px;
+    padding: 15px;
+  }
+  
+  .voice-settings h3 {
+    font-size: 1.1rem;
+  }
+  
+  .voice-options {
+    gap: 10px;
+  }
+  
+  .voice-option {
+    padding: 12px 16px;
+    min-width: 70px;
+  }
+  
+  .voice-icon {
+    font-size: 1.8rem;
+  }
+  
+  .voice-name {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .voice-settings {
+    min-width: 160px;
+    padding: 12px;
+  }
+  
+  .voice-option {
+    padding: 10px 14px;
+    min-width: 60px;
+  }
+  
+  .voice-icon {
+    font-size: 1.6rem;
+  }
+  
+  .voice-name {
+    font-size: 0.75rem;
+  }
+} 
