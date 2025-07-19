@@ -1,235 +1,176 @@
-# Task C: Solace Lite End-to-End Demo
+# Task C: Solace Lite - Voice-to-Voice AI Companion
 
-## Overview
-
-A minimal voice→voice companion with chat and voice customization, trained in psychiatric knowledge. This demo showcases:
-
-- **Voice Capture & ASR**: Real-time microphone input with Voice Activity Detection (VAD)
-- **Chatbot**: OpenAI GPT-3.5 integration for intelligent responses
-- **TTS & Voice Customization**: Text-to-speech with male/female voice options
-- **UI/UX**: Modern React interface with voice controls
-- **Memory Layer**: Encrypted localStorage for conversation history
-- **Error Handling**: Comprehensive error handling and logging
+A minimal voice-to-voice AI companion with chat and voice customization, trained in psychiatric knowledge.
 
 ## Features
 
-### 🎤 Voice Capture & ASR
-- Real-time microphone input using Web Audio API
-- Voice Activity Detection using @ricky0123/vad-web
-- Audio transcription via OpenAI Whisper API
-- Automatic speech start/stop detection
-
-### 🤖 Chatbot
-- OpenAI GPT-3.5/4 integration
-- Psychiatric knowledge training
-- Context-aware responses
-- Conversation memory (last 3 exchanges)
-
-### 🔊 TTS & Voice Customization
-- Text-to-speech synthesis
-- Male/Female voice selection
-- Audio playback with fallback to browser speech synthesis
-- Mock TTS service for demo purposes
-
-### 🎨 UI/UX
-- Modern React interface with glassmorphism design
-- Real-time voice status indicators
-- Conversation history display
-- Voice selection controls
-- Error handling and user feedback
-
-### 🔐 Security & Memory
-- End-to-end encryption using Web Crypto API
-- Encrypted localStorage for conversation history
-- Secure key management
-- Privacy-focused design
-
-## Prerequisites
-
-1. **Node.js** (>=16.x)
-2. **npm** or **yarn**
-3. **OpenAI API Key** (for ASR and chatbot)
-4. **Modern browser** with Web Audio API support
-
-## Environment Variables
-
-Create a `.env` file in the `task-C` directory:
-
-```bash
-# Required
-VITE_OPENAI_API_KEY=your_openai_api_key_here
-
-# Optional (for production TTS)
-VITE_AWS_POLLY_ACCESS_KEY=your_aws_access_key
-VITE_AWS_POLLY_SECRET_KEY=your_aws_secret_key
-VITE_AWS_REGION=us-east-1
-```
-
-## Quick Start
-
-### 1. Install Dependencies
-
-```bash
-cd task-C
-npm install
-```
-
-### 2. Start Mock Backend
-
-```bash
-npm run mock-backend
-```
-
-This starts the mock backend server on `http://localhost:4000`
-
-### 3. Start Development Server
-
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:3000`
-
-### 4. Usage
-
-1. **Grant microphone permissions** when prompted
-2. **Select voice preference** (Male/Female)
-3. **Click "Start Listening"** to begin voice interaction
-4. **Speak clearly** - the system will detect speech automatically
-5. **Wait for response** - the AI will transcribe, process, and respond
-6. **View conversation history** in the chat interface
+- Voice Activity Detection (VAD) for automatic speech detection
+- OpenAI Whisper API for speech-to-text transcription
+- OpenAI GPT-3.5 for intelligent responses
+- Text-to-Speech with voice customization (Male/Female)
+- Encrypted conversation memory using Web Crypto API
+- Test mode for demo purposes (bypasses API calls)
+- Modern, responsive UI with glass morphism design
 
 ## Project Structure
 
 ```
 task-C/
+├── public/
 ├── src/
 │   ├── components/
-│   │   ├── VoiceCompanion.jsx      # Main voice companion component
-│   │   ├── VoiceCapture.jsx        # Voice capture and VAD
-│   │   ├── VoiceSettings.jsx       # Voice selection UI
-│   │   └── ChatInterface.jsx       # Conversation display
+│   │   ├── VoiceCompanion.jsx      # Main app component
+│   │   ├── VoiceCapture.jsx        # Voice recording interface
+│   │   ├── VoiceSettings.jsx       # Voice selection (Male/Female)
+│   │   ├── ChatInterface.jsx       # Conversation history display
+│   │   ├── VoiceCompanion.css
+│   │   ├── VoiceCapture.css
+│   │   ├── VoiceSettings.css
+│   │   └── ChatInterface.css
 │   ├── hooks/
 │   │   ├── useOpenAI.js           # OpenAI API integration
-│   │   ├── useTTS.js              # Text-to-speech utilities
-│   │   └── useVoiceMemory.js      # Encrypted memory management
+│   │   ├── useTTS.js              # Text-to-speech functionality
+│   │   └── useVoiceMemory.js      # Encrypted localStorage memory
 │   ├── utils/
-│   │   ├── vad.js                 # Voice Activity Detection
-│   │   └── crypto.js              # Encryption utilities
-│   ├── App.jsx                    # Main app component
-│   └── main.jsx                   # React entry point
+│   │   ├── vad-simple.js          # Simple VAD implementation
+│   │   └── crypto.js              # AES-GCM encryption utilities
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
 ├── mock-backend/
-│   └── server.js                  # Mock backend server
-├── package.json                   # Dependencies and scripts
-├── vite.config.js                 # Vite configuration
-└── README.md                      # This file
+│   ├── server.js                  # Express server for TTS and blob storage
+│   └── package.json
+├── package.json
+├── vite.config.js
+└── README.md
 ```
 
-## API Endpoints
+## Setup
 
-### Mock Backend (localhost:4000)
+### Prerequisites
 
-- `GET /health` - Health check
-- `POST /upload` - Upload encrypted blobs
-- `GET /download/:blobKey` - Download blobs
-- `POST /api/tts` - Text-to-speech service
-- `GET /blobs` - List stored blobs
-- `DELETE /blobs/:blobKey` - Delete blob
+- Node.js 16+ 
+- OpenAI API key
 
-### External APIs
+### Installation
 
-- **OpenAI Whisper**: Audio transcription
-- **OpenAI GPT-3.5**: Chat completion
-- **Browser Speech Synthesis**: Fallback TTS
+1. Install dependencies:
+```bash
+npm install
+```
 
-## Technical Details
+2. Create `.env` file in the root directory:
+```bash
+VITE_OPENAI_API_KEY=your_openai_api_key_here
+```
+
+3. Start the mock backend server:
+```bash
+cd mock-backend
+npm install
+npm start
+```
+
+4. Start the development server:
+```bash
+npm run dev
+```
+
+## Usage
+
+1. **Enable Test Mode**: Check the "Test Mode" checkbox to bypass API calls for reliable demos
+2. **Voice Selection**: Choose between Male or Female voice
+3. **Start Listening**: Click the microphone button to begin voice interaction
+4. **Speak**: The app will automatically detect speech and transcribe it
+5. **Listen**: The AI will respond with synthesized speech
+
+## API Limitations
+
+**Important**: Due to OpenAI API rate limits, the application may encounter 429 "Too Many Requests" errors when making real API calls. This is expected behavior when:
+
+- Making multiple requests in quick succession
+- Exceeding OpenAI's rate limits
+- Using the free tier API key
+
+**Solutions**:
+- Use "Test Mode" for demos (bypasses all API calls)
+- Wait 1-2 minutes between requests
+- Upgrade to a paid OpenAI plan for higher rate limits
+
+## Technical Implementation
 
 ### Voice Activity Detection
-- Uses @ricky0123/vad-web for real-time speech detection
-- Configurable thresholds for speech start/stop
-- Automatic audio capture and processing
+- Uses `MediaRecorder` API for audio capture
+- Simple VAD implementation with configurable thresholds
+- Automatic speech start/stop detection
 
-### Encryption
-- AES-GCM-256 encryption using Web Crypto API
-- Secure key generation and storage
-- Encrypted conversation memory in localStorage
+### Speech Processing
+- Converts audio to WAV format for OpenAI Whisper
+- Rate limiting and retry logic for API calls
+- Error handling for transcription failures
 
-### Audio Processing
-- Float32Array to WAV conversion for OpenAI Whisper
-- 16kHz sample rate for optimal transcription
-- Automatic audio format conversion
+### Memory System
+- AES-GCM-256 encryption for localStorage
+- Stores conversation history securely
+- Maintains context for AI responses
 
-### Error Handling
-- Network error detection and recovery
-- Microphone permission handling
-- Graceful fallbacks for failed services
-- User-friendly error messages
+### Text-to-Speech
+- Mock backend server for TTS processing
+- Browser speech synthesis fallback
+- Voice customization (Male/Female)
+
+## Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+
+### Backend Server
+
+The mock backend runs on port 4000 and provides:
+- Health check endpoint
+- Blob storage for audio files
+- TTS service endpoints
+- CORS support for frontend integration
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Microphone not working**
-   - Check browser permissions
-   - Ensure HTTPS or localhost
-   - Try refreshing the page
+1. **"Rate limit exceeded" errors**
+   - Enable Test Mode for demos
+   - Wait between requests
+   - Check OpenAI API key validity
 
-2. **OpenAI API errors**
-   - Verify API key in .env file
-   - Check API key permissions
-   - Ensure sufficient credits
+2. **Microphone not working**
+   - Ensure browser permissions are granted
+   - Check HTTPS/localhost requirement
+   - Verify microphone hardware
 
-3. **VAD not detecting speech**
-   - Speak clearly and loudly
-   - Check microphone input levels
-   - Try adjusting VAD thresholds
-
-4. **TTS not working**
-   - Check browser speech synthesis support
-   - Verify mock backend is running
-   - Check console for errors
+3. **VAD misfires**
+   - Adjust VAD sensitivity in `vad-simple.js`
+   - Check audio input levels
+   - Use manual stop button if needed
 
 ### Debug Mode
 
-Enable debug logging by opening browser console and running:
-```javascript
-localStorage.setItem('debug', 'true');
-```
+Enable browser console logging to see:
+- VAD status and audio processing
+- API request/response details
+- Error messages and stack traces
+- Memory operations
 
-## Production Deployment
+## Dependencies
 
-For production deployment:
+### Frontend
+- React 18
+- Vite
+- Web Crypto API (built-in)
+- MediaRecorder API (built-in)
 
-1. **Replace mock TTS** with AWS Polly or similar service
-2. **Add proper CORS** configuration
-3. **Implement rate limiting** for API endpoints
-4. **Add authentication** for sensitive operations
-5. **Use HTTPS** for all communications
-6. **Configure proper error monitoring**
-
-## Security Considerations
-
-- API keys are stored in environment variables
-- Encryption keys are generated locally
-- No sensitive data is transmitted unencrypted
-- Conversation history is encrypted at rest
-- Microphone access requires explicit user permission
-
-## Performance Notes
-
-- VAD processing is real-time and optimized
-- Audio conversion is done efficiently
-- Memory usage is minimal and controlled
-- Network requests are batched where possible
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details 
+### Backend
+- Express.js
+- CORS middleware
+- File upload handling
